@@ -3,6 +3,8 @@ package by.pvt.fortune.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.pvt.fortune.util.RandonNumber;
+
 public class Chamomile {
 
 	private List<String> petal;

@@ -1,15 +1,19 @@
 package by.pvt.fortune.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import by.pvt.fortune.util.FortuneScanner;
+import by.pvt.fortune.util.RandonNumber;
 
 public class FortuneTeller {
 	private List<Chamomile> chamomile;
 	private Map<Integer, List<String>> fortunes;
 	private int capacity;
-	
+	private List<Client> clients = new ArrayList<>();
 
 	public FortuneTeller() {
 		capacity = RandonNumber.getRandomNumber();
@@ -18,14 +22,16 @@ public class FortuneTeller {
 		setFortunes();
 	}
 
-	public void tellFortunes() {
-		if (!chamomile.isEmpty()) {
+	public void tellFortunes(Client client) {
+		if (!chamomile.isEmpty() && checkDate(client)) {
 			getTopics();
 			int choice = FortuneScanner.readChoiseNumber();
 			List<String> answers = getFortune(choice);
 			setChamomileAnswers(answers);
 			fortuneTelling();
 			removeChamomile();
+			addClient(client);
+			setUsageDate(client);
 		} else {
 			System.out.println("go away!");
 		}
@@ -101,6 +107,27 @@ public class FortuneTeller {
 	private void removeChamomile() {
 		if (!chamomile.isEmpty()) {
 			chamomile.remove(0);
+		}
+	}
+
+	private void setUsageDate(Client client) {
+		Date testDate = new Date();
+		client.setTestDate(testDate);
+	}
+
+	private boolean checkDate(Client client) {
+		if (client != null) {
+			Date curentDate = new Date();
+			if (curentDate.equals(client.getTestDate())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void addClient(Client client) {
+		if (client != null) {
+			clients.add(client);
 		}
 	}
 }
