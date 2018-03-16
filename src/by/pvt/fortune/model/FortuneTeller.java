@@ -1,25 +1,33 @@
 package by.pvt.fortune.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static by.pvt.fortune.util.CreateChamomile.*;
 import by.pvt.fortune.util.FortuneScanner;
 import by.pvt.fortune.util.RandonNumber;
+import static by.pvt.fortune.util.SetterFortunes.*;
 
 public class FortuneTeller {
 	private List<Chamomile> chamomile;
 	private Map<Integer, List<String>> fortunes;
-	private int capacity;
 	private List<Client> clients = new ArrayList<>();
+	private int capacity;
+	private static final int INCREASE_BY_ONE_DAY = 1;
 
 	public FortuneTeller() {
 		capacity = RandonNumber.getRandomNumber();
-		chamomile = new ArrayList<>(capacity);
-		createChamomile();
-		setFortunes();
+		chamomile = createChamomiles(capacity);
+		fortunes = setFortunes();
+	}
+
+	public FortuneTeller(int capacity) {
+		this.capacity = capacity;
+		chamomile = createChamomiles(capacity);
+		fortunes = setFortunes();
 	}
 
 	public void tellFortunes(Client client) {
@@ -37,22 +45,10 @@ public class FortuneTeller {
 		}
 	}
 
-	private void createChamomile() {
-		for (int i = 0; i < capacity; i++) {
-			chamomile.add(new Chamomile());
-		}
-	}
-
 	private void getTopics() {
 		System.out.println("1 - love...");
-		System.out.println("2 - how many children will be?");
+		System.out.println("2 - how many children will you have?");
 		System.out.println();
-	}
-
-	private void setFortunes() {
-		fortunes = new HashMap<>();
-		fortunes.put(1, Fortune.getLoveFortune());
-		fortunes.put(2, Fortune.getKidsFortune());
 	}
 
 	private List<String> getFortune(int choice) {
@@ -118,11 +114,26 @@ public class FortuneTeller {
 	private boolean checkDate(Client client) {
 		if (client != null) {
 			Date curentDate = new Date();
-			if (curentDate.equals(client.getTestDate())) {
+			Date fortuneDate = getClientsDate(client);
+			if (fortuneDate != null) {
+				if (curentDate.after(fortuneDate)) {
+					return true;
+				}
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private Date getClientsDate(Client client) {
+		Date fortuneDate = client.getTestDate();
+		Calendar cal = Calendar.getInstance();
+		if (fortuneDate != null) {
+			cal.setTime(fortuneDate);
+			cal.add(Calendar.DAY_OF_MONTH, INCREASE_BY_ONE_DAY);
+			return cal.getTime();
+		}
+		return null;
 	}
 
 	private void addClient(Client client) {

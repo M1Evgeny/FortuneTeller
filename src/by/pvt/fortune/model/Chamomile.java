@@ -15,6 +15,11 @@ public class Chamomile {
 		petal = new ArrayList<>(capacity);
 	}
 
+	public Chamomile(int capacity) {
+		this.capacity = capacity;
+		petal = new ArrayList<>(capacity);
+	}
+
 	public List<String> getChamomilePetal() {
 		return petal;
 	}

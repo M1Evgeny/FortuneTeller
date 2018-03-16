@@ -8,6 +8,10 @@ public class Client {
 	public Client() {
 	}
 
+	public Client(Date date) {
+		testDate = date;
+	}
+
 	public Date getTestDate() {
 		return testDate;
 	}
